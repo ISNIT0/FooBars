@@ -32,7 +32,7 @@
       }));
       return $(value).remove();
     });
-    return cb(null, $.html().replace(/[\n]/g, ''));
+    return cb(null, $.html().replace(/[\n]/g, '')) || $.html().replace(/[\n]/g, '');
   };
 
 }).call(this);
