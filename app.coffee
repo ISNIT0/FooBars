@@ -1,54 +1,41 @@
 Entities = require('html-entities').AllHtmlEntities
 entities = new Entities()
 cheerio = require 'cheerio'
-fs = require 'fs'
-
-data =
-  name:'Geoff'
-  age:18
-  friends:['freddie','billy']
 
 helpers =
-  isTrue:->true
+  test:['billy','fred']
+  a:->'a'
+  b:->'b'
 
-fs.readFile './temp.bars', 'utf8', (err, file)->
-
+parse = (src, helpers)->
+  replaceData = (src, templateData)->
+    src.match(/{{[^>#](.*?)}}/g).map (value, index)->
+      src.replace value, new Function(
+        'return '+value.replace /[{}]/g, ''
+      ).bind(templateData)()
+    .join('')
+  file = require('fs').readFileSync src, 'utf8'
   out = entities.decode file
   $ = cheerio.load out
+  $('show').map (index, value)->
+    $(value).before $('template[name='+$(value).attr('name')+']').html()
+    $(value).remove()
+    $('template[name='+$(value).attr('name')+']').remove()
+  $('if').map (index, value)->
+    if !new Function('return '+
+      entities.decode $.html(value).split('<if ')[1]
+      .split('>')[0]
+      .replace(/["]/g,'')
+    ).bind(helpers)()
+      $(value).remove()
+    else
+      $(value).before $(value).html()
+      $(value).remove()
+  $('each').map (index, value)->
+    $(value).before (new Function('return '+entities.decode $(value).attr('of'))
+      .bind(helpers)()||[]).map (data, index)->
+        replaceData($(value).html(), data)
+    $(value).remove()
+  $.html().replace /[\n]/g,''
 
-  (entities.decode($.html()).match(/{{> (.*?)}}/g)||[]).map (bar, index)->
-    out = entities.decode out.replace bar, $('template[name='+bar.replace(/[{}>#]/g,'')+']').html()||'You are missing a template!'
-    out = entities.decode out.replace $('template[name='+bar.replace(/[{}>#]/g,'')+']'),''
-
-  $ = cheerio.load out
-
-  $('each').map (index, bar)->
-    thisBar=''
-    (data[bar.attribs.of]||[]).map (val, index)->
-      thisBar+=replaceData $(bar).html(), 'this', val
-    out = entities.decode out.replace $.html(bar), thisBar
-
-  $ = cheerio.load out
-
-  $('if').map (index, bar)->
-    thisBar=''
-    Object.keys(bar.attribs).map (val,index)->
-      if eval(val)==helpers[bar.attribs[val]]() || val==helpers[bar.attribs[val]]() then thisBar+=$(bar).html()
-    out = out.replace $.html(bar), thisBar
-
-  $ = cheerio.load out
-
-  (entities.decode($.html()).match(/\{{([^>#}]+)\}}/g)||[]).map (bar, index)->
-    Object.keys(data).map (key, index)->
-      if key == bar.replace /[{}]/g,'' then out = out.replace bar, data[key]
-
-
-
-  $ = cheerio.load out
-  $('template').remove()
-  out = $.html()
-
-  console.log out
-
-
-replaceData = (src,key,data)->entities.decode(src).replace('{{'+key+'}}', data)
+console.log parse './temp.bars', helpers

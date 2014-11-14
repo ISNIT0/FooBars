@@ -1,27 +1,25 @@
-
 <body>
-  <h1>Test</h1>
-  {{> home}}
-  <h1>Whooo!</h1>
-  {{> nav}}
+  <show name='another'></show>
+  <show name='home'></show>
+
+<if this.a()==this.b()||'a'>
+  <h1>Hey Thar</h1>
+</if>
+
+<if this.b()!=this.a()>
+  <h4>Damn Straight</h4>
+</if>
+
+<each of='this.test'>
+  I like my friend {{this}}<br />
+</each>
+
+  <template name='home'>
+  <h3>This is a template</h3>
+</template>
+
+  <template name='another'>
+    <if true==true><h1>hi!</h1></if>
+  </template>
+
 </body>
-
-
-<template name='home'>
-  <h1>Hi</h1>
-  My name is {{name}} and I am {{age}} years old.
-
-  <each of='friends'>
-  {{> friend}}
-  </each>
-
-  <if true='isTrue'>
-   <b>I like My friends</b>
-  </if>
-
-</template>
-
-
-<template name='friend'>
-  <h3>I like my friend {{this}}</h3>
-</template>
