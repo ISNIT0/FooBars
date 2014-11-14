@@ -6,8 +6,16 @@ Works as express middleware.
 
 To parse:
 
-> FooBars = require('FooBars').parse
-> FooBars('PATH_TO_FILE.html',{myData:'Goes Here', can:function(){'also be a function'}},optionalCallback)
+```javascript
+FooBars = require('FooBars').parse
+
+FooBars('PATH_TO_FILE.html',{
+  myData:'Goes Here',
+  can:function(){
+    'also be a function'
+  }
+},optionalCallback)
+```
 
 FooBars will run callback with 2 paramaters. Error and HTML.
 If no callback is supplies, FooBars will return data in a Synchronous fassion.
