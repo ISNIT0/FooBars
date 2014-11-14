@@ -13,6 +13,6 @@ exports.parse = (src, helpers, cb)->
       replaceData $(value).html(), helpers, value
   $('each').map (index, value)->
     reval(helpers, entities.decode $(value).attr('of')).map (data, index)->
-        replaceData $(value).html(), data, value
+      replaceData $(value).html(), data, value
   $('each, if, template').remove()
   cb(null, $.html().replace /[\n]/g,'')||$.html().replace /[\n]/g,''
