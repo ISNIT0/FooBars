@@ -30,4 +30,4 @@ exports.parse = (src, helpers, cb)->
       .bind(helpers)()||[]).map (data, index)->
         replaceData($(value).html(), data)
     $(value).remove()
-  cb null, $.html().replace /[\n]/g,''
+  cb(null, $.html().replace /[\n]/g,'')||$.html().replace /[\n]/g,''
