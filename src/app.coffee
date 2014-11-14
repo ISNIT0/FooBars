@@ -1,13 +1,7 @@
-Entities = require('html-entities').AllHtmlEntities
-entities = new Entities()
-cheerio = require 'cheerio'
-
-helpers =
-  test:['billy','fred']
-  a:->'a'
-  b:->'b'
-
-parse = (src, helpers)->
+exports.parse = (src, helpers, cb)->
+  Entities = require('html-entities').AllHtmlEntities
+  entities = new Entities()
+  cheerio = require 'cheerio'
   replaceData = (src, templateData)->
     src.match(/{{[^>#](.*?)}}/g).map (value, index)->
       src.replace value, new Function(
@@ -18,7 +12,7 @@ parse = (src, helpers)->
   out = entities.decode file
   $ = cheerio.load out
   $('show').map (index, value)->
-    $(value).before $('template[name='+$(value).attr('name')+']').html()
+    $(value).before replaceData $('template[name='+$(value).attr('name')+']').html(), helpers
     $(value).remove()
     $('template[name='+$(value).attr('name')+']').remove()
   $('if').map (index, value)->
@@ -29,13 +23,11 @@ parse = (src, helpers)->
     ).bind(helpers)()
       $(value).remove()
     else
-      $(value).before $(value).html()
+      $(value).before replaceData $(value).html(), helpers
       $(value).remove()
   $('each').map (index, value)->
     $(value).before (new Function('return '+entities.decode $(value).attr('of'))
       .bind(helpers)()||[]).map (data, index)->
         replaceData($(value).html(), data)
     $(value).remove()
-  $.html().replace /[\n]/g,''
-
-console.log parse './temp.bars', helpers
+  cb null, $.html().replace /[\n]/g,''
