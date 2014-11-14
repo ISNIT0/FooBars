@@ -1,33 +1,18 @@
 exports.parse = (src, helpers, cb)->
-  Entities = require('html-entities').AllHtmlEntities
-  entities = new Entities()
-  cheerio = require 'cheerio'
-  replaceData = (src, templateData)->
-    src.match(/{{[^>#](.*?)}}/g).map (value, index)->
-      src.replace value, new Function(
-        'return '+value.replace /[{}]/g, ''
-      ).bind(templateData)()
-    .join('')
-  file = require('fs').readFileSync src, 'utf8'
-  out = entities.decode file
-  $ = cheerio.load out
+  reval = (helpers, value)->new Function('return '+value).bind(helpers)()
+  entities = new(require('html-entities').AllHtmlEntities)()
+  $ = require('cheerio').load entities.decode require('fs').readFileSync src, 'utf8'
+  replaceData = (src, templateData, value)->
+    $(src.match(/{{[^>#](.*?)}}/g)).map ->
+      src = src.replace this, reval(templateData, this.replace /[{}]/g, '')
+    $(value).before src
   $('show').map (index, value)->
-    $(value).before replaceData $('template[name='+$(value).attr('name')+']').html(), helpers
-    $(value).remove()
-    $('template[name='+$(value).attr('name')+']').remove()
+    replaceData $('template[name='+$(value).attr('name')+']').html(), helpers, value
   $('if').map (index, value)->
-    if !new Function('return '+
-      entities.decode $.html(value).split('<if ')[1]
-      .split('>')[0]
-      .replace(/["]/g,'')
-    ).bind(helpers)()
-      $(value).remove()
-    else
-      $(value).before replaceData $(value).html(), helpers
-      $(value).remove()
+    if reval helpers, entities.decode $.html(value).split('<if ')[1].split('>')[0].replace(/["]/g,'')
+      replaceData $(value).html(), helpers, value
   $('each').map (index, value)->
-    $(value).before (new Function('return '+entities.decode $(value).attr('of'))
-      .bind(helpers)()||[]).map (data, index)->
-        replaceData($(value).html(), data)
-    $(value).remove()
+    reval(helpers, entities.decode $(value).attr('of')).map (data, index)->
+        replaceData $(value).html(), data, value
+  $('each, if, template').remove()
   cb(null, $.html().replace /[\n]/g,'')||$.html().replace /[\n]/g,''
