@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "foobars": ">= 0.0.1",
+    "express": ">= 4.10.2"
+  }
+}
