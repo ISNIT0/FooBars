@@ -1,0 +1,27 @@
+
+<body>
+  <h1>Test</h1>
+  {{> home}}
+  <h1>Whooo!</h1>
+  {{> nav}}
+</body>
+
+
+<template name='home'>
+  <h1>Hi</h1>
+  My name is {{name}} and I am {{age}} years old.
+
+  <each of='friends'>
+  {{> friend}}
+  </each>
+
+  <if true='isTrue'>
+   <b>I like My friends</b>
+  </if>
+
+</template>
+
+
+<template name='friend'>
+  <h3>I like my friend {{this}}</h3>
+</template>
