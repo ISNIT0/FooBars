@@ -1,4 +1,4 @@
-foobars = require '../foobars/bin/app.js'
+foobars = require '../src/app.coffee'
 app = require('express')()
 
 app.set 'view engine', 'html'

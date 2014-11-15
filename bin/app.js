@@ -22,11 +22,14 @@
       }
     });
     $('each').map(function(index, value) {
-      return reval(helpers, entities.decode($(value).attr('of'))).map(function(data, index) {
+      return reval(helpers, entities.decode($(value).attr('of'))).map(function(index, data) {
         return replaceData($(value).html(), data, value);
       });
     });
-    $('each, if, template').remove();
+    $('markdown').map(function(index, value) {
+      return $(value).before(require('node-markdown').Markdown($(value).html()));
+    });
+    $('show, each, if, template, markdown').remove();
     return cb(null, $.html().replace(/[\n]/g, '')) || $.html().replace(/[\n]/g, '');
   };
 

@@ -1,12 +1,13 @@
 {
   "name": "foobars",
   "description": "Small and simple JS templating engine",
-  "git": "https://github.com/isnit0/FooBars.git",
+  "repository": "https://github.com/isnit0/FooBars.git",
   "author": "Joe Reeve <github@atslash.com>",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "dependencies": {
     "cheerio": ">= 0.1.8",
-    "html-entities": ">= 1.1.1"
+    "html-entities": ">= 1.1.1",
+    "node-markdown": ">= 0.1.1"
   },
   "devDependencies": {
     "coffee-script": ">= 1.8.0",
