@@ -43,16 +43,16 @@ Template Syntax:
 {
   a:function(){return 'a'},
   b:function(){return 'b'},
-  friends:['Jonnie', 'Matt']
+  friends:[{name:'jonnie'}, {name:'Matt'}]
 }
 ```
 
 ###If
 
 ```html
-<if 'a' == a() || function(){ return 'a' }>
+<temp {'a' == a()}>
   <h1>Turns out 'a' is equal to 'a'</h1>
-</if>
+</temp>
 ```
 
 ```html
@@ -63,15 +63,19 @@ Template Syntax:
 ###Each
 
 ```html
-<each of='this.friends'>
-  <h1>I like {{name}}, he is my friend.</h1>
-</each>
+<temp {this.friends}>
+  <h1>I like <data {this.name}></data>, he is my friend.</h1>
+</temp>
 ```
 
 ```html
-<h1>I like Jonnie, he is my friend.</h1>
-<h1>I like Matt, he is my friend.</h1>
+<h1>I like <data {this.name}>Jonnie</data>, he is my friend.</h1>
+<h1>I like <data {this.name}>Matt</data>, he is my friend.</h1>
 ```
+
+
+To Do ______
+==
 
 ###Templates
 
