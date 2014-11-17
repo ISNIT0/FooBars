@@ -4,6 +4,10 @@ FooBars
 Small and fast coffeescript template library.
 Works as express middleware.
 
+```javascript
+npm install foobars
+```
+
 With Express:
 
 ```javascript
