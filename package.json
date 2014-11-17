@@ -3,7 +3,7 @@
   "description": "Small and simple JS templating engine",
   "repository": "https://github.com/isnit0/FooBars.git",
   "author": "Joe Reeve <github@atslash.com>",
-  "version": "0.0.3",
+  "version": "0.0.8",
   "dependencies": {
     "cheerio": ">= 0.1.8",
     "html-entities": ">= 1.1.1",

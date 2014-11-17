@@ -22,7 +22,8 @@
       }
     });
     $('each').map(function(index, value) {
-      return reval(helpers, entities.decode($(value).attr('of'))).map(function(index, data) {
+      return reval(helpers, entities.decode($(value).attr('of'))).map(function(data, index) {
+        console.log(index, data);
         return replaceData($(value).html(), data, value);
       });
     });
