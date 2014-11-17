@@ -1,20 +1,15 @@
-exports.parse = (src, helpers, cb)->
-  reval = (helpers, value)->new Function('return '+value).bind(helpers)()
-  entities = new(require('html-entities').AllHtmlEntities)()
-  $ = require('cheerio').load entities.decode require('fs').readFileSync src, 'utf8'
-  replaceData = (src, templateData, value)->
-    $(src.match(/{{[^>#](.*?)}}/g)).map ->
-      src = src.replace this, reval(templateData, this.replace /[{}]/g, '')
-    $(value).before src
-  $('show').map (index, value)->
-    replaceData $('template[name='+$(value).attr('name')+']').html(), helpers, value
-  $('if').map (index, value)->
-    if reval helpers, entities.decode $.html(value).split('<if ')[1].split('>')[0].replace(/["]/g,'')
-      replaceData $(value).html(), helpers, value
-  $('each').map (index, value)->
-    reval(helpers, entities.decode $(value).attr('of')).map (index, data)->
-      replaceData $(value).html(), data, value
-  $('markdown').map (index, value)->
-    $(value).before(require('node-markdown').Markdown($(value).html()))
-  $('show, each, if, template, markdown').remove()
-  cb(null, $.html().replace /[\n]/g,'')||$.html().replace /[\n]/g,''
+exports.parse = (src, data, cb)->
+  $ = require('cheerio').load require('fs').readFileSync src, 'utf8'
+  getData = (value)->
+    if $(value).is('html') then return data
+    else return (new Function('return '+($(value).attr('data')||'this'))).bind(getData($(value).parent()))()
+  replaceData = (index, value)->
+    $(value).children('temp, data').map (index, value)->{
+         'temp':(->each(0, value)),'data':->$(value).html getData value
+      }[value.name]()
+    $(value).children().not('temp').map replaceData
+  each=(index, value)->
+    getData(value).map (data, index)->replaceData $(value).before $('<div>').attr('data',$(value).attr('data')+'['+index+']').html($(value).html())
+  replaceData(0,$('body')[0])
+  $('temp').remove()
+  cb(null, $.html())

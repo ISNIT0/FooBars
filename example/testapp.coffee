@@ -6,13 +6,7 @@ app.engine 'html', foobars.parse
 
 app.get '/', (req, res)->
   res.render 'home',
-    me:'Joe'
-    friends:[
-      {name:'Jonnie',age:18,siblings:[]},
-      {name:'Matt',age:18,siblings:[
-        {name:'Georgie', age:14}
-      ]}
-    ]
+    test:[['Joe','Jack'],['Billy','Freddie']]
 app.listen 1337
 
 
