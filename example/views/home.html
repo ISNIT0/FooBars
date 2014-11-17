@@ -1,26 +1,12 @@
 <body>
-    <show name='home'></show>
-
-    <template name='home'>
-        <h1>My Site...</h1>
-        <h4>My name is {{this.me}}</h4>
-    </template>
-
-    <each of='this.friends'>
-        I like {{this.name}}, he is {{this.age}} years old.
-    </each>
-
-    <br />
-
-    <if true==true>true</if>
-    <if true==false>false</if>
-
-<markdown>
-Test
-==
-
-**This is a markdown** string
-</markdown>
-
+    <h1>Testing</h1>
+    <temp {this.test}>
+        <h1>Whoo!</h1>
+        <temp {this}>
+            <h4>I like <data {this}></data>, they are my friend.</h4>
+        </temp>
+    </temp>
+    <temp {'a'=='a'}>
+        A is equal to A
+    </temp>
 </body>
-
