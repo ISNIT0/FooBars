@@ -4,6 +4,14 @@ FooBars
 Small and fast coffeescript template library.
 Works as express middleware.
 
+With Express:
+
+```javascript
+app.set 'view engine', 'html'
+app.engine 'html', require('foobars').parse
+```
+
+
 To parse:
 
 ```javascript
